@@ -39,4 +39,5 @@ class Camera():
 
 
     def camera_matrix(self):
-        return self.position @ self.orientation
+
+        return self.position() @ self.orientation()

@@ -12,7 +12,7 @@ class Projection:
 
         #define projection matrix
         m00 = 2 / (RIGHT-LEFT)
-        m11 = 2 / ()
+        m11 = 2 / (TOP-BOTTOM)
         m22 = (FAR+NEAR) / (FAR - NEAR)
         m32 = -2* NEAR * FAR / (FAR - NEAR)
 
