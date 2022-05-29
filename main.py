@@ -19,7 +19,7 @@ class Render:
         self.camera = Camera(self, [0.5,1,-4])
         self.projection = Projection(self)
         self.object = Object(self)
-        self.object.cube()
+        self.object.triangular_pyramid()
         print(self.object.vertices)
         self.object.translate([0.2, 0.4, 0.2])
         self.object.rotateY(np.pi / 6)

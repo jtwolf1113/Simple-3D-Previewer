@@ -1,4 +1,5 @@
 from matrix_math import *
+import pygame as pg
 
 class Camera():
     def __init__(self, app_window, position) -> None:
@@ -16,6 +17,10 @@ class Camera():
         #set near and far render params
         self.near = 0.1
         self.far = 100
+
+    def move_camera(self):
+        key = pg.key.get_pressed()
+        #choose controls for camera
     
     def position(self):
         x,y,z,w = self.pos
@@ -39,5 +44,4 @@ class Camera():
 
 
     def camera_matrix(self):
-
         return self.position() @ self.orientation()

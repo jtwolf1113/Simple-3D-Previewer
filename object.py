@@ -36,7 +36,7 @@ class Object:
     def draw(self):
         self.projection()
     
-    def cube(self):
+    def triangular_pyramid(self):
         self.vertices = np.array([(0,0,0,1),(1,0,0,1),(0,1,0,1),(0,0,1,1)])
         self.faces = np.array([(0,1,2),(0,1,3),(0,2,3),(1,2,3)])
 
