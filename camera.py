@@ -17,10 +17,32 @@ class Camera():
         #set near and far render params
         self.near = 0.1
         self.far = 100
+        #define camera motion change rates
+        self.translation_rate = 0.02
+        self.rotation_rate = 0.01
+        #define direction for camera field of view
+        self.right = np.array([1,0,0,1])# right is right
+        self.up = np.array([0,1,0,1]) # up is vertical
+        self.forward = np.array([0,0,1,1]) #z is into the screen
 
     def move_camera(self):
         key = pg.key.get_pressed()
         #choose controls for camera
+        if key[pg.K_d]:
+            self.pos -= self.right * self.translation_rate
+        if key[pg.K_a]:
+            self.pos += self.right * self.translation_rate
+        if key[pg.K_s]:
+            self.pos += self.forward * self.translation_rate
+        if key[pg.K_w]:
+            self.pos -= self.forward * self.translation_rate
+        if key[pg.K_e]:
+            self.pos += self.up * self.translation_rate
+        if key[pg.K_q]:
+            self.pos -= self.up * self.translation_rate
+        
+        
+        
     
     def position(self):
         x,y,z,w = self.pos

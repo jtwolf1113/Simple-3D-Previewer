@@ -31,6 +31,7 @@ class Render:
     def run_program(self):
         while True:
             self.draw_frames()
+            self.camera.move_camera()
             [exit() for i in pg.event.get() if i.type == pg.QUIT]
             pg.display.set_caption('FPS: '+str(int(self.clock.get_fps())))
             pg.display.flip()
