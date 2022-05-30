@@ -19,7 +19,7 @@ class Camera():
         self.far = 100
         #define camera motion change rates
         self.translation_rate = 0.02
-        self.rotation_rate = 0.01
+        self.rotation_rate = 0.1
         #define direction for camera field of view
         self.right = np.array([1,0,0,1])# right is right
         self.up = np.array([0,1,0,1]) # up is vertical
@@ -28,6 +28,7 @@ class Camera():
     def move_camera(self):
         key = pg.key.get_pressed()
         #choose controls for camera
+        #camera translation controls
         if key[pg.K_d]:
             self.pos -= self.right * self.translation_rate
         if key[pg.K_a]:
@@ -40,6 +41,34 @@ class Camera():
             self.pos += self.up * self.translation_rate
         if key[pg.K_q]:
             self.pos -= self.up * self.translation_rate
+        #camera orientation controls
+        #'''
+        if key[pg.K_LEFT]:
+            self.horizontal_angle(-self.rotation_rate)
+        if key[pg.K_RIGHT]:
+            self.horizontal_angle(self.rotation_rate)
+        if key[pg.K_UP]:
+            self.vertical_angle(self.rotation_rate)
+        if key[pg.K_DOWN]:
+            self.vertical_angle(-self.rotation_rate)
+        #'''
+
+        
+        
+    
+    def vertical_angle(self, angle):
+        rotate = rotate_y(angle)
+        self.forward = self.forward @ rotate
+        self.right = self.right @ rotate
+        self.up = self.up @ rotate
+    
+    def horizontal_angle(self, angle):
+        rotate = rotate_x(angle)
+        self.forward = self.forward @ rotate
+        self.right = self.right @ rotate
+        self.up = self.up @ rotate
+
+
         
         
         

@@ -39,6 +39,11 @@ class Object:
     def triangular_pyramid(self):
         self.vertices = np.array([(0,0,0,1),(1,0,0,1),(0,1,0,1),(0,0,1,1)])
         self.faces = np.array([(0,1,2),(0,1,3),(0,2,3),(1,2,3)])
+    def cube(self):
+        self.vertices = np.array([(0,0,0,1),(1,0,0,1),(0,1,0,1),(0,0,1,1),
+                                  (1,1,0,1),(1,0,1,1),(0,1,1,1),(1,1,1,1)])
+        self.faces = np.array([(0,1,4,2), (0,1,5,3), (1,4,7,5), 
+                               (0,3,6,2), (3,5,7,6), (2,6,7,4)])
 
     #implement transformation matrix math
     def translate(self, dr):
