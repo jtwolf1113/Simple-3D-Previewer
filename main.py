@@ -23,7 +23,6 @@ class Render:
         self.camera = Camera(self, [-5,5,-50])
         self.projection = Projection(self)
         self.object = self.read_obj('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.obj')
-        #self.object = Object(self)
         #self.create_default_scene()
     
     def read_obj(self, file):
@@ -47,6 +46,7 @@ class Render:
                 pass
 
     def create_default_scene(self):
+        self.object = Object(self)
         self.object.cube()
         self.object.translate([0.2, 0.4, 0.2])
         self.axes = Axes(self)

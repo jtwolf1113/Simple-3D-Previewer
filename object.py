@@ -2,6 +2,7 @@ from matrix_math import *
 import pygame as pg
 import numpy as np
 from numba import njit
+#reduce np.any bottleneck
 @njit(fastmath =True)
 def np_any_function(arr, a, b):
     return np.any((arr == a) | (arr == b))
@@ -39,6 +40,7 @@ class Object:
         #slice out the 2D coordinates currently in view
         vertices = vertices[:,:2]
 
+        #iterate over each face to ensure it's in view and draw the projection
         for index, color_face in enumerate(self.color_faces):
             color, face = color_face
             polygon = vertices[face]
@@ -47,20 +49,23 @@ class Object:
                 if self.label:
                     text = self.font.render(self.label[index], True, pg.Color('white'))
                     self.window.screen.blit(text, polygon[-1])
+        #similar for each vertex
         if self.draw_vertices:
             for vertex in vertices:
                 if not np_any_function(vertex, self.window.WIDTH/2, self.window.HEIGHT/2): #np.any((vertex == self.window.WIDTH/2) | (vertex == self.window.HEIGHT/2)):
                     pg.draw.circle(self.window.screen, pg.Color('white'), vertex, 2)
 
-
+    #object draw function
     def draw(self):
         self.projection()
         self.default_movement()
     
+    #simple animation for inspection
     def default_movement(self):
         if self.movement:
             self.rotateY(-(pg.time.get_ticks() % 0.005))
     
+    #basic triangular pyramid shape
     def triangular_pyramid(self):
         self.vertices = np.array([(0,0,0,1),(1,0,0,1),(0,1,0,1),(0,0,1,1)])
         self.faces = np.array([(0,1,2),(0,1,3),(0,2,3),(1,2,3)])
@@ -69,6 +74,7 @@ class Object:
         self.color_faces = [(pg.Color('pink'), face) for face in self.faces]
         self.label = ''
 
+    #basic cube shape
     def cube(self):
         self.vertices = np.array([(0,0,0,1),(1,0,0,1),(0,1,0,1),(0,0,1,1),
                                   (1,1,0,1),(1,0,1,1),(0,1,1,1),(1,1,1,1)])
@@ -78,7 +84,7 @@ class Object:
 
         self.color_faces = []
         for face in self.faces:
-            self.color_faces.append((pg.Color('blue'), face)) 
+            self.color_faces.append((pg.Color('pink'), face)) 
         self.label = ''
 
 
@@ -98,7 +104,11 @@ class Object:
     def rotateZ(self, angle):
         self.vertices = self.vertices @ rotate_z(angle)
 
+
+
 class Axes(Object):
+    #create Axes inheriting from Object
+    #want to use these to visualize the global coordinates vs object's local coordinates
     def __init__(self, app) -> None:
         super().__init__(app)
         self.vertices = np.array([(0,0,0,1),(1,0,0,1),(0,1,0,1),(0,0,1,1)])
