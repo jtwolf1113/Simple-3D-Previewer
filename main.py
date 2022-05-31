@@ -20,6 +20,25 @@ class Render:
         self.camera = Camera(self, [0.5,1,-4])
         self.projection = Projection(self)
         self.object = Object(self)
+        self.create_default_scene()
+    
+    def read_obj(self, file):
+        vertices, faces = [],[]
+        with open(file) as f:
+            for line in f:
+                if line.startswith('v '):
+                    vertices.append([coord for coord in line.split()[1:]]+[1])
+                elif line.startswith('f '):
+                    pass
+        return Object(self, vertices, faces)
+
+    def read_stl(self, file):
+        vertices, faces = [],[]
+        with open(file) as f:
+            for line in f:
+                pass
+
+    def create_default_scene(self):
         self.object.cube()
         self.object.translate([0.2, 0.4, 0.2])
         self.axes = Axes(self)
@@ -35,7 +54,7 @@ class Render:
         return None
     '''
     def draw_frames(self):
-        self.screen.fill(pg.Color(120,120,120))
+        self.screen.fill(pg.Color(66,69,73))
         self.object.draw()
         self.axes.draw()
         self.world_axes.draw()

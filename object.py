@@ -3,12 +3,12 @@ import pygame as pg
 import numpy as np
 
 class Object:
-    def __init__(self, app) -> None:
+    def __init__(self, app, vertices = None, faces= None) -> None:
         self.window = app
         #vertices are the coordinates in 4-space
-        self.vertices = np.array([])
+        self.vertices = np.array([]) if vertices == None else vertices
         #faces are indices of relevant vertices
-        self.faces = np.array([])
+        self.faces = np.array([]) if faces == None else faces
         self.font = pg.font.SysFont('Arial', 30, bold=True)
         self.movement = True
         self.draw_vertices = True
@@ -67,7 +67,6 @@ class Object:
         self.color_faces = []
         for face in self.faces:
             self.color_faces.append((pg.Color('blue'), face)) 
-        #self.color_faces = [(pg.Color('blue'), face) for face in self.faces]
         self.label = ''
 
 
