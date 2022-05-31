@@ -1,5 +1,6 @@
 import pygame as pg
 import numpy as np
+from sqlalchemy import false
 from camera import *
 from projection import *
 from object import *
@@ -14,23 +15,30 @@ class Render:
         self.icon = pg.image.load('icon.png')
         pg.display.set_icon(self.icon)
         self.create_objects()
+        self.axes = False
+        self.world_axes = False
         
 
     def create_objects(self):
-        self.camera = Camera(self, [0.5,1,-4])
+        self.camera = Camera(self, [-5,5,-50])
         self.projection = Projection(self)
-        self.object = Object(self)
-        self.create_default_scene()
+        self.object = self.read_obj('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.obj')
+        #self.object = Object(self)
+        #self.create_default_scene()
     
     def read_obj(self, file):
         vertices, faces = [],[]
         with open(file) as f:
             for line in f:
                 if line.startswith('v '):
-                    vertices.append([coord for coord in line.split()[1:]]+[1])
+                    vertices.append([float(coord) for coord in line.split()[1:]]+[1])
                 elif line.startswith('f '):
-                    pass
-        return Object(self, vertices, faces)
+                    face_lines = line.split()[1:]
+                    faces.append(tuple([int(face_line.split('//')[0]) - 1 for face_line in face_lines]))
+        vertices = np.array(vertices)
+        faces = np.array(faces)
+        print(vertex for vertex in vertices)
+        return Object(self, vertices = vertices, faces = faces)
 
     def read_stl(self, file):
         vertices, faces = [],[]
@@ -56,8 +64,10 @@ class Render:
     def draw_frames(self):
         self.screen.fill(pg.Color(66,69,73))
         self.object.draw()
-        self.axes.draw()
-        self.world_axes.draw()
+        if self.axes:
+            self.axes.draw()
+        if self.world_axes:
+           self.world_axes.draw()
 
     def run_program(self):
         while True:

@@ -6,9 +6,17 @@ class Object:
     def __init__(self, app, vertices = None, faces= None) -> None:
         self.window = app
         #vertices are the coordinates in 4-space
-        self.vertices = np.array([]) if vertices == None else vertices
+        if vertices is not None:
+            self.vertices = vertices
+        else:
+            self.vertices = np.array([])
         #faces are indices of relevant vertices
-        self.faces = np.array([]) if faces == None else faces
+        if faces is not None:
+            self.faces = faces
+            self.color_faces = [(pg.Color('pink'), face) for face in self.faces]
+            self.label = '' 
+        else:
+            self.faces = np.array([])
         self.font = pg.font.SysFont('Arial', 30, bold=True)
         self.movement = True
         self.draw_vertices = True
@@ -31,14 +39,14 @@ class Object:
             color, face = color_face
             polygon = vertices[face]
             if not np.any((polygon == self.window.WIDTH/2) | (polygon == self.window.HEIGHT/2)):
-                pg.draw.polygon(self.window.screen, color, polygon, 3)
+                pg.draw.polygon(self.window.screen, color, polygon, 1)
                 if self.label:
                     text = self.font.render(self.label[index], True, pg.Color('white'))
                     self.window.screen.blit(text, polygon[-1])
         if self.draw_vertices:
             for vertex in vertices:
                 if not np.any((vertex == self.window.WIDTH/2) | (vertex == self.window.HEIGHT/2)):
-                    pg.draw.circle(self.window.screen, pg.Color('white'), vertex, 6)
+                    pg.draw.circle(self.window.screen, pg.Color('white'), vertex, 2)
 
 
     def draw(self):

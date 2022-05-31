@@ -18,8 +18,8 @@ class Camera():
         self.near = 0.1
         self.far = 100
         #define camera motion change rates
-        self.translation_rate = 0.02
-        self.rotation_rate = 0.01
+        self.translation_rate = 0.5
+        self.rotation_rate = 0.005
 
     def move_camera(self):
         key = pg.key.get_pressed()
