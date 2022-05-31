@@ -1,6 +1,10 @@
 from matrix_math import *
 import pygame as pg
 import numpy as np
+from numba import njit
+@njit(fastmath =True)
+def np_any_function(arr, a, b):
+    return np.any((arr == a) | (arr == b))
 
 class Object:
     def __init__(self, app, vertices = None, faces= None) -> None:
@@ -38,14 +42,14 @@ class Object:
         for index, color_face in enumerate(self.color_faces):
             color, face = color_face
             polygon = vertices[face]
-            if not np.any((polygon == self.window.WIDTH/2) | (polygon == self.window.HEIGHT/2)):
+            if not np_any_function(polygon, self.window.WIDTH/2, self.window.HEIGHT/2): #np.any((polygon == self.window.WIDTH/2) | (polygon == self.window.HEIGHT/2)):
                 pg.draw.polygon(self.window.screen, color, polygon, 1)
                 if self.label:
                     text = self.font.render(self.label[index], True, pg.Color('white'))
                     self.window.screen.blit(text, polygon[-1])
         if self.draw_vertices:
             for vertex in vertices:
-                if not np.any((vertex == self.window.WIDTH/2) | (vertex == self.window.HEIGHT/2)):
+                if not np_any_function(vertex, self.window.WIDTH/2, self.window.HEIGHT/2): #np.any((vertex == self.window.WIDTH/2) | (vertex == self.window.HEIGHT/2)):
                     pg.draw.circle(self.window.screen, pg.Color('white'), vertex, 2)
 
 
