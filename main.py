@@ -14,6 +14,7 @@ class Render:
         self.icon = pg.image.load('icon.png')
         pg.display.set_icon(self.icon)
         self.create_objects()
+        
 
     def create_objects(self):
         self.camera = Camera(self, [0.5,1,-4])
@@ -21,11 +22,23 @@ class Render:
         self.object = Object(self)
         self.object.cube()
         self.object.translate([0.2, 0.4, 0.2])
-        self.object.rotateY(np.pi / 6)
+        self.axes = Axes(self)
+        self.axes.translate([0.7,.9,.7])
+        self.world_axes = Axes(self)
+        self.world_axes.scale(2.5)
+        self.world_axes.translate([0.0001,0.0001,0.0001])
+        self.world_axes.movement = False
 
+
+    '''
+    def draw_UI(self):
+        return None
+    '''
     def draw_frames(self):
         self.screen.fill(pg.Color(120,120,120))
         self.object.draw()
+        self.axes.draw()
+        self.world_axes.draw()
 
     def run_program(self):
         while True:

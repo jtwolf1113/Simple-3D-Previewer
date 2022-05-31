@@ -19,28 +19,24 @@ class Camera():
         self.far = 100
         #define camera motion change rates
         self.translation_rate = 0.02
-        self.rotation_rate = 0.1
-        #define direction for camera field of view
-        self.right = np.array([1,0,0,1])# right is right
-        self.up = np.array([0,1,0,1]) # up is vertical
-        self.forward = np.array([0,0,1,1]) #z is into the screen
+        self.rotation_rate = 0.01
 
     def move_camera(self):
         key = pg.key.get_pressed()
         #choose controls for camera
         #camera translation controls
         if key[pg.K_d]:
-            self.pos -= self.right * self.translation_rate
+            self.pos -= self.x_ori * self.translation_rate
         if key[pg.K_a]:
-            self.pos += self.right * self.translation_rate
+            self.pos += self.x_ori * self.translation_rate
         if key[pg.K_s]:
-            self.pos += self.forward * self.translation_rate
+            self.pos += self.z_ori * self.translation_rate
         if key[pg.K_w]:
-            self.pos -= self.forward * self.translation_rate
+            self.pos -= self.z_ori * self.translation_rate
         if key[pg.K_e]:
-            self.pos += self.up * self.translation_rate
+            self.pos += self.y_ori * self.translation_rate
         if key[pg.K_q]:
-            self.pos -= self.up * self.translation_rate
+            self.pos -= self.y_ori * self.translation_rate
         #camera orientation controls
         #'''
         if key[pg.K_LEFT]:
@@ -56,17 +52,17 @@ class Camera():
         
         
     
-    def vertical_angle(self, angle):
-        rotate = rotate_y(angle)
-        self.forward = self.forward @ rotate
-        self.right = self.right @ rotate
-        self.up = self.up @ rotate
-    
     def horizontal_angle(self, angle):
+        rotate = rotate_y(angle)
+        self.z_ori = self.z_ori @ rotate
+        self.x_ori = self.x_ori @ rotate
+        self.y_ori = self.y_ori @ rotate
+    
+    def vertical_angle(self, angle):
         rotate = rotate_x(angle)
-        self.forward = self.forward @ rotate
-        self.right = self.right @ rotate
-        self.up = self.up @ rotate
+        self.z_ori = self.z_ori @ rotate
+        self.x_ori = self.x_ori @ rotate
+        self.y_ori = self.y_ori @ rotate
 
 
         
@@ -95,4 +91,4 @@ class Camera():
 
 
     def camera_matrix(self):
-        return self.position() @ self.orientation()
+        return self.orientation() @ self.position()
