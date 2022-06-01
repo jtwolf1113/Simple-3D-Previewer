@@ -4,6 +4,8 @@ from camera import *
 from projection import *
 from object import *
 import stl
+from zipfile import ZipFile
+from re import findall
 
 class Render:
     def __init__(self) -> None:
@@ -22,7 +24,8 @@ class Render:
     def create_objects(self):
         self.camera = Camera(self, [-5,5,-50])
         self.projection = Projection(self)
-        self.object = self.read_stl('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2.stl')
+        self.object = self.read_3mf('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.3mf')
+        #self.object = self.read_stl('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2.stl')
         #self.object = self.read_obj('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.obj')
         #self.create_default_scene()
     
@@ -52,7 +55,20 @@ class Render:
         vertices = np.array(vertices)
         faces = np.array(faces)
         return Object(self, vertices=vertices, faces=faces)
-
+    
+    def read_3mf(self, file):
+        vertices, faces = [],[]
+        with ZipFile(file) as zip_object:
+            with zip_object.open('3D/3dmodel.model') as f:
+                for line in f.readlines():
+                    if line.startswith(b'                    <vertex'):
+                        vertices.append([float(k) for k in findall(b'"([^"]*)"', line)]+[1])
+                    elif line.startswith(b'                    <triangle'):
+                        faces.append([int(k) for k in findall(b'"([^"]*)"', line)])
+        vertices = np.array(vertices)
+        faces = np.array(faces)
+        return Object(self, vertices=vertices, faces=faces)
+    
 
     def create_default_scene(self):
         self.object = Object(self)
