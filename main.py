@@ -3,9 +3,10 @@ import numpy as np
 from camera import *
 from projection import *
 from object import *
-import stl
+from stl import mesh
 from zipfile import ZipFile
 from re import findall
+#import tkinter as tk
 
 class Render:
     def __init__(self) -> None:
@@ -17,17 +18,15 @@ class Render:
         self.icon = pg.image.load('icon.png')
         pg.display.set_icon(self.icon)
         self.create_objects()
-        self.axes = False
-        self.world_axes = False
         
 
     def create_objects(self):
-        self.camera = Camera(self, [-5,5,-50])
+        self.camera = Camera(self, [.5,1,-4])
         self.projection = Projection(self)
-        self.object = self.read_3mf('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.3mf')
+        #self.object = self.read_3mf('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.3mf')
         #self.object = self.read_stl('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2.stl')
         #self.object = self.read_obj('Small 30 mm Shield Scaled up 10x V1.4 Gear  v2-export.obj')
-        #self.create_default_scene()
+        self.create_default_scene()
     
     def read_obj(self, file):
         vertices, faces = [],[]
@@ -44,9 +43,9 @@ class Render:
 
     def read_stl(self, file):
         vertices, faces = [],[]
-        mesh = stl.mesh.Mesh.from_file(file)
+        mesh_item = mesh.Mesh.from_file(file)
         vertex_index = 0
-        for face in mesh.data:
+        for face in mesh_item.data:
             for vertex in face[1]:
                 vertices.append(vertex.tolist()+[1])
             #need to adjust this to tell which vertex    
@@ -89,9 +88,9 @@ class Render:
     def draw_frames(self):
         self.screen.fill(pg.Color(66,69,73))
         self.object.draw()
-        if self.axes:
+        if hasattr(self, 'axes'):
             self.axes.draw()
-        if self.world_axes:
+        if hasattr(self,'world_axes'):
            self.world_axes.draw()
 
     def run_program(self):
