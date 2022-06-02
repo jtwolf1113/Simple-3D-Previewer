@@ -28,11 +28,17 @@ class App(tk.Tk):
         self.fullscreen_check = tk.Checkbutton(text='Fullscreen', command=self.fullscreen_select)
         self.fullscreen_check.pack()
 
+        self.vertices = True
+        self.vertices_check_var = tk.BooleanVar(value = True)
+        self.vertices_check = tk.Checkbutton(text='Render Vertices', var = self.vertices_check_var, command=self.vertices_select)
+        self.vertices_check.pack()
+
         self.launch_button = tk.Button(self, text="Display!", command=self.display)
         self.launch_button.pack(pady=2.5)
 
-    def file_select(self):
-        self.file = fileopenbox(filetypes=['*.stl','*.obj','*.3mf', '3D Object Files'])
+    def file_select(self): 
+        filetypes = [['*.stl', '*.obj', '*.3mf', 'Compatible 3D Files']]
+        self.file = fileopenbox(filetypes=filetypes, multiple=False)
         self.selected_file['text'] = f'Selected File: {self.file}'
     
     def fullscreen_select(self):
@@ -40,13 +46,19 @@ class App(tk.Tk):
             self.fullscreen = False
         elif not self.fullscreen:
             self.fullscreen = True
-        
+    def vertices_select(self):
+        if self.vertices:
+            self.vertices = False
+        elif not self.vertices:
+            self.vertices = True
+    '''   
     def display_preview(self, event):
         if event.data.endswith('.3mf'):
             object_3d = Render.read_3mf(file = event.data)
+    '''
 
     def display(self):
-        self.subwindow = Render(file = self.file, fullscreen = self.fullscreen)
+        self.subwindow = Render(file = self.file, fullscreen = self.fullscreen, draw_vertices=self.vertices)
         self.subwindow.run_program()
     
     def on_close(self):

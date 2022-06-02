@@ -8,7 +8,7 @@ from zipfile import ZipFile
 from re import findall
 
 class Render:
-    def __init__(self, file = None, fullscreen = False) -> None:
+    def __init__(self, file = None, fullscreen = False, draw_vertices = True) -> None:
         if file is not None:
             self.file = file
             self.filetype = file[-4:]
@@ -16,6 +16,7 @@ class Render:
             self.file = None
             self.filetype = ''
         self.RESOLUTION = self.WIDTH, self.HEIGHT = 1540, 800
+        self.draw_vertices = draw_vertices
         pg.init()
         if fullscreen:
             self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
@@ -53,7 +54,7 @@ class Render:
                     faces.append(tuple([int(face_line.split('//')[0]) - 1 for face_line in face_lines]))
         vertices = np.array(vertices)
         faces = np.array(faces)
-        return Object(self, vertices = vertices, faces = faces)
+        return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
 
     def read_stl(self, file):
         vertices, faces = [],[]
@@ -67,7 +68,7 @@ class Render:
             vertex_index += 3
         vertices = np.array(vertices)
         faces = np.array(faces)
-        return Object(self, vertices=vertices, faces=faces)
+        return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
     
     def read_3mf(self, file):
         vertices, faces = [],[]
@@ -80,11 +81,11 @@ class Render:
                         faces.append([int(k) for k in findall(b'"([^"]*)"', line)])
         vertices = np.array(vertices)
         faces = np.array(faces)
-        return Object(self, vertices=vertices, faces=faces)
+        return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
     
 
     def create_default_scene(self):
-        self.object = Object(self)
+        self.object = Object(self, draw_vertices=self.draw_vertices)
         self.object.cube()
         self.object.translate([0.2, 0.4, 0.2])
         self.axes = Axes(self)

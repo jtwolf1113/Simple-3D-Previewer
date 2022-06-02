@@ -8,7 +8,7 @@ def np_any_function(arr, a, b):
     return np.any((arr == a) | (arr == b))
 
 class Object:
-    def __init__(self, app, vertices = None, faces= None) -> None:
+    def __init__(self, app, vertices = None, faces= None, draw_vertices = True) -> None:
         self.window = app
         #vertices are the coordinates in 4-space
         if vertices is not None:
@@ -24,7 +24,7 @@ class Object:
             self.faces = np.array([])
         self.font = pg.font.SysFont('Arial', 30, bold=True)
         self.movement = True
-        self.draw_vertices = True
+        self.draw_vertices = draw_vertices
 
     def projection(self):
         #how do the vertices appear relative to the camera position
