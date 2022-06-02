@@ -8,20 +8,24 @@ from zipfile import ZipFile
 from re import findall
 
 class Render:
-    def __init__(self, file = None) -> None:
+    def __init__(self, file = None, fullscreen = False) -> None:
         if file is not None:
             self.file = file
             self.filetype = file[-4:]
         else:
             self.file = None
             self.filetype = ''
-        pg.init()
         self.RESOLUTION = self.WIDTH, self.HEIGHT = 1540, 800
+        pg.init()
+        if fullscreen:
+            self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
+        else:
+            self.screen = pg.display.set_mode(self.RESOLUTION)
         self.FPSMAX = 144
-        self.screen = pg.display.set_mode(self.RESOLUTION)
         self.clock = pg.time.Clock()
         self.icon = pg.image.load('icon.png')
         pg.display.set_icon(self.icon)
+        
         self.create_objects()
         
         
@@ -90,11 +94,6 @@ class Render:
         self.world_axes.translate([0.0001,0.0001,0.0001])
         self.world_axes.movement = False
 
-
-    '''
-    def draw_UI(self):
-        return None
-    '''
     def draw_frames(self):
         self.screen.fill(pg.Color(66,69,73))
         self.object.draw()
