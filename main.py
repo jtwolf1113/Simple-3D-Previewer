@@ -21,6 +21,7 @@ class App(TkinterDnD.Tk):
         self.warning_font = 'Times 12 bold'
         self.warning_label = None
         self.warning_text = None
+        self.subwindow = None
 
         self.geometry('770x600')
         self.protocol('WM_DELETE_WINDOW', self.on_close)
@@ -39,7 +40,9 @@ class App(TkinterDnD.Tk):
         self.selected_file = tk.Label(self, text = f'Selected File: {self.file}', font =self.font,bg = self.primary_blue,relief = 'solid')
         self.selected_file.pack(pady=2.5)
 
+        #self.display_preview()      
         self.preview_frame = tk.Canvas(self, height=22, width=50)
+        self.preview_frame.create_image(image = self.preview)
         self.preview_frame.pack()
         self.preview_frame_text = tk.Label(self.preview_frame, text = 'Drag and Drop Files Here', font = self.font+' bold', fg = self.primary_blue, bg = 'white', borderwidth=1, relief = 'solid', highlightcolor='black')
         self.preview_frame_text.pack()
@@ -58,7 +61,12 @@ class App(TkinterDnD.Tk):
         self.launch_button = tk.Button(self, text="Display!", command=self.display, font =self.font, bg = self.primary_blue, relief = 'solid')
         self.launch_button.pack(pady=2.5)
 
-        
+    def display_preview(self):
+        preview = self.file[:-4]+'.png'
+        self.subwindow.generate_png_preview(preview)
+        self.preview = preview
+        #need to render the first frame
+
 
     def file_select(self): 
         filetypes = [['*.stl', '*.obj', '*.3mf', 'Compatible 3D Files']]
@@ -115,7 +123,11 @@ class App(TkinterDnD.Tk):
 
 
     def display(self):
-        self.subwindow = Render(file = self.file, fullscreen = self.fullscreen, draw_vertices=self.vertices)
+        if self.subwindow is None:
+            self.subwindow = Render(file = self.file, fullscreen = self.fullscreen, draw_vertices=self.vertices)
+        elif self.subwindow.file != self.file or self.subwindow.fullscreen != self.fullscreen or self.subwindow.draw_vertices != self.vertices:
+            self.subwindow = Render(file = self.file, fullscreen = self.fullscreen, draw_vertices=self.vertices)
+
         self.subwindow.run_program()
     
     def on_close(self):

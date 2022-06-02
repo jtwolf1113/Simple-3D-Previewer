@@ -126,4 +126,11 @@ class Render:
             pg.display.set_caption('FPS: '+str(int(self.clock.get_fps())))
             pg.display.flip()
             self.clock.tick(self.FPSMAX)
+    def generate_png_preview(self, png_file_name):
+        self.create_pygame_window()
+        while True:
+            self.draw_frames()
+            self.camera.move_camera()
+            pg.image.save(file = png_file_name)
+            pg.quit()
 
