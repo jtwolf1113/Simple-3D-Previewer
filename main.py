@@ -1,5 +1,3 @@
-from ctypes.wintypes import RGB
-from msilib.schema import Icon
 import tkinter as tk
 from tkinter import messagebox
 from tkinterdnd2 import *
