@@ -7,6 +7,11 @@ from numba import njit
 def np_any_function(arr, a, b):
     return np.any((arr == a) | (arr == b))
 
+#@njit(fastmath=True)
+#def np_enabled_projection(vertices):
+    #coordinates larger than two are not currently in view
+#    return vertices
+
 
 class Object:
     def __init__(self, app, vertices = None, faces= None, draw_vertices = True) -> None:
@@ -32,10 +37,14 @@ class Object:
         vertices = self.vertices @ self.window.camera.camera_matrix()
         #how does the image scale due to the projection properties
         vertices = vertices @ self.window.projection.projection_matrix
+
+        #renormalize the coordinates after the transformation
         #renormalize the coordinates after the transformation
         vertices /= vertices[:, -1].reshape(-1,1)
-        #coordinates larger than one are not currently in view
+
+        #coordinates larger than two are not currently in view
         vertices[(vertices > 2) | (vertices < -2)] = 0
+
         #scale the normalized space to the screen resolution
         vertices = vertices @ self.window.projection.screen_matrix
         #slice out the 2D coordinates currently in view

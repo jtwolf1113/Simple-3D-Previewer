@@ -1,3 +1,8 @@
+'''
+The following code was inspired by
+Copyright (c) 2020 StanislavPetrov
+'''
+
 import pygame as pg
 import numpy as np
 from camera import *
