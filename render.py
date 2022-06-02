@@ -9,7 +9,6 @@ from re import findall
 
 class Render:
     def __init__(self, file = None, fullscreen = False, draw_vertices = True) -> None:
-
         self.fullscreen = fullscreen
         if file is not None:
             self.file = file
@@ -20,16 +19,7 @@ class Render:
         self.RESOLUTION = self.WIDTH, self.HEIGHT = 1540, 800
         self.draw_vertices = draw_vertices
         self.FPSMAX = 144
-        pg.init()
-        if self.fullscreen:
-            self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
-        else:
-            self.screen = pg.display.set_mode(self.RESOLUTION)
-        self.clock = pg.time.Clock()
-        self.icon = pg.image.load('icon.png')
-        pg.display.set_icon(self.icon)
         
-        self.create_objects()
         
         
         
@@ -110,7 +100,20 @@ class Render:
         if hasattr(self,'world_axes'):
            self.world_axes.draw()
 
+    def create_pygame_window(self):
+        pg.init()
+        if self.fullscreen:
+            self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
+        else:
+            self.screen = pg.display.set_mode(self.RESOLUTION)
+        self.clock = pg.time.Clock()
+        self.icon = pg.image.load('icon.png')
+        pg.display.set_icon(self.icon)
+        
+        self.create_objects()
+
     def run_program(self):
+        self.create_pygame_window()
         while True:
             self.draw_frames()
             self.camera.move_camera()
