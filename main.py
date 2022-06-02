@@ -13,6 +13,17 @@ class App(tk.Tk):
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.title('Wolf\'s 3D engine')
         self.iconbitmap('icon.ico')
+        self.font = 'Times 12'
+        self.warning_font = 'Times 12 bold'
+        self.warning_label = None
+
+        self.geometry('770x600')
+        self.protocol('WM_DELETE_WINDOW', self.on_close)
+        
+        self.title('Wolf\'s 3D engine')
+        self.iconbitmap('icon.ico')
+
+        self.configure(background = self.primary_blue)
         self.create_UI()
     
     def create_UI(self):
@@ -20,12 +31,17 @@ class App(tk.Tk):
         self.file_selector.pack(pady=5)
 
         self.selected_file = tk.Label(self, text = f'Selected File: {self.file}')
+        self.file_selector = tk.Button(self, text="Choose File", command=self.file_select, font =self.font, bg = self.primary_blue)
+        self.file_selector.pack(pady=5)
+
+        self.selected_file = tk.Label(self, text = f'Selected File: {self.file}', font =self.font,bg = self.primary_blue)
         self.selected_file.pack(pady=2.5)
 
 
 
         self.fullscreen = False
         self.fullscreen_check = tk.Checkbutton(text='Fullscreen', command=self.fullscreen_select)
+        self.fullscreen_check = tk.Checkbutton(self, text='Fullscreen', command=self.fullscreen_select, font =self.font, bg = self.primary_blue)
         self.fullscreen_check.pack()
 
         self.vertices = True
@@ -34,6 +50,10 @@ class App(tk.Tk):
         self.vertices_check.pack()
 
         self.launch_button = tk.Button(self, text="Display!", command=self.display)
+        self.vertices_check = tk.Checkbutton(self, text='Render Vertices', var = self.vertices_check_var, command=self.vertices_select, font =self.font, bg = self.primary_blue)
+        self.vertices_check.pack()
+
+        self.launch_button = tk.Button(self, text="Display!", command=self.display, font =self.font, bg = self.primary_blue)
         self.launch_button.pack(pady=2.5)
 
     def file_select(self): 

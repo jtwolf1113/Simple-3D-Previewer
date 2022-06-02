@@ -9,6 +9,8 @@ from re import findall
 
 class Render:
     def __init__(self, file = None, fullscreen = False, draw_vertices = True) -> None:
+
+        self.fullscreen = fullscreen
         if file is not None:
             self.file = file
             self.filetype = file[-4:]
@@ -17,17 +19,18 @@ class Render:
             self.filetype = ''
         self.RESOLUTION = self.WIDTH, self.HEIGHT = 1540, 800
         self.draw_vertices = draw_vertices
+        self.FPSMAX = 144
         pg.init()
-        if fullscreen:
+        if self.fullscreen:
             self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
         else:
             self.screen = pg.display.set_mode(self.RESOLUTION)
-        self.FPSMAX = 144
         self.clock = pg.time.Clock()
         self.icon = pg.image.load('icon.png')
         pg.display.set_icon(self.icon)
         
         self.create_objects()
+        
         
         
 
@@ -51,8 +54,12 @@ class Render:
                     vertices.append([float(coord) for coord in line.split()[1:]]+[1])
                 elif line.startswith('f '):
                     face_lines = line.split()[1:]
-                    faces.append(tuple([int(face_line.split('//')[0]) - 1 for face_line in face_lines]))
-        vertices = np.array(vertices)
+                    if '//' in line:
+                        splitter = '//'
+                    else:
+                         splitter = '/'
+                    faces.append(tuple([int(face_line.split(splitter)[0]) - 1 for face_line in face_lines]))
+        vertices = np.array(vertices, dtype='float16')
         faces = np.array(faces)
         return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
 
@@ -66,7 +73,7 @@ class Render:
             #need to adjust this to tell which vertex    
             faces.append((vertex_index,vertex_index+1, vertex_index+2))
             vertex_index += 3
-        vertices = np.array(vertices)
+        vertices = np.array(vertices, dtype='float16')
         faces = np.array(faces)
         return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
     
@@ -79,7 +86,7 @@ class Render:
                         vertices.append([float(k) for k in findall(b'"([^"]*)"', line)]+[1])
                     elif line.startswith(b'                    <triangle'):
                         faces.append([int(k) for k in findall(b'"([^"]*)"', line)])
-        vertices = np.array(vertices)
+        vertices = np.array(vertices, dtype='float16')
         faces = np.array(faces)
         return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
     

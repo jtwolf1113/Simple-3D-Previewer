@@ -7,6 +7,7 @@ from numba import njit
 def np_any_function(arr, a, b):
     return np.any((arr == a) | (arr == b))
 
+
 class Object:
     def __init__(self, app, vertices = None, faces= None, draw_vertices = True) -> None:
         self.window = app
