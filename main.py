@@ -40,7 +40,6 @@ class App(TkinterDnD.Tk):
         self.selected_file = tk.Label(self, text = f'Selected File: {self.file}', font =self.font,bg = self.primary_blue,relief = 'solid')
         self.selected_file.pack(pady=2.5)
 
-        #self.display_preview()      
         self.preview_frame = tk.Canvas(self, height=22, width=50)
         self.preview_frame.create_image(image = self.preview)
         self.preview_frame.pack()
@@ -62,9 +61,15 @@ class App(TkinterDnD.Tk):
         self.launch_button.pack(pady=2.5)
 
     def display_preview(self):
-        preview = self.file[:-4]+'.png'
-        self.subwindow.generate_png_preview(preview)
-        self.preview = preview
+        if self.file is not None:
+            preview = self.file[:-4]+'.png'
+            self.preview = preview
+            if self.subwindow is not None:
+                self.subwindow.generate_png_preview(preview)
+            else:
+                self.subwindow = Render(file = self.file, fullscreen = False, draw_vertices=False)
+                self.subwindow.generate_png_preview(preview)
+        
         #need to render the first frame
 
 
