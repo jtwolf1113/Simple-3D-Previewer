@@ -30,7 +30,7 @@ class Render:
         
 
     def create_objects(self):
-        self.camera = Camera(self, [.5,1,-4])
+        self.camera = Camera(self, [.5,1,-6])
         self.projection = Projection(self)
         if self.filetype == '.stl':
             self.object = self.read_stl(self.file)
@@ -114,7 +114,6 @@ class Render:
         self.clock = pg.time.Clock()
         self.icon = pg.image.load('icon.png')
         pg.display.set_icon(self.icon)
-        
         self.create_objects()
 
     def run_program(self):
@@ -124,13 +123,20 @@ class Render:
             self.camera.move_camera()
             [pg.quit() for i in pg.event.get() if i.type == pg.QUIT]
             pg.display.set_caption('FPS: '+str(int(self.clock.get_fps())))
-            pg.display.flip()
+            pg.display.update()
             self.clock.tick(self.FPSMAX)
+
+
+    def create_pygame_surface(self):
+        pg.init()
+        self.screen = pg.Surface(self.RESOLUTION)
+        self.create_objects()
+
     def generate_png_preview(self, png_file_name):
-        self.create_pygame_window()
+        self.create_pygame_surface()
         while True:
             self.draw_frames()
             self.camera.move_camera()
-            pg.image.save(file = png_file_name)
-            pg.quit()
-
+            pg.image.save(self.screen, png_file_name)
+            break
+        pg.quit()

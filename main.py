@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
+from xmlrpc.client import boolean
 from tkinterdnd2 import *
+from PIL import Image, ImageTk
 
 from pygame import FULLSCREEN
 from render import *
@@ -40,13 +42,14 @@ class App(TkinterDnD.Tk):
         self.selected_file = tk.Label(self, text = f'Selected File: {self.file}', font =self.font,bg = self.primary_blue,relief = 'solid')
         self.selected_file.pack(pady=2.5)
 
-        self.preview_frame = tk.Canvas(self, height=22, width=50)
-        self.preview_frame.create_image(image = self.preview)
+        
+        self.preview_frame = tk.Canvas(self, width=385, height=200, background=self.primary_gray)
         self.preview_frame.pack()
-        self.preview_frame_text = tk.Label(self.preview_frame, text = 'Drag and Drop Files Here', font = self.font+' bold', fg = self.primary_blue, bg = 'white', borderwidth=1, relief = 'solid', highlightcolor='black')
-        self.preview_frame_text.pack()
-        self.preview_frame.drop_target_register(DND_FILES)
-        self.preview_frame.dnd_bind('<<Drop>>', self.drag_and_drop_file_select)
+        self.display_preview()
+        self.photo = ImageTk.PhotoImage(Image.open(self.preview).resize((385, 200), Image.ANTIALIAS))
+        self.preview_id = self.preview_frame.create_image(192, 100, image = self.photo, anchor = tk.CENTER)
+        self.drop_target_register(DND_FILES)
+        self.dnd_bind('<<Drop>>', self.drag_and_drop_file_select)
 
         self.fullscreen = False
         self.fullscreen_check = tk.Checkbutton(self, text='Fullscreen', command=self.fullscreen_select, font =self.font, bg = self.primary_blue, relief = 'solid')
@@ -69,13 +72,33 @@ class App(TkinterDnD.Tk):
             else:
                 self.subwindow = Render(file = self.file, fullscreen = False, draw_vertices=False)
                 self.subwindow.generate_png_preview(preview)
-        
-        #need to render the first frame
+        elif self.file is None:
+            self.preview = 'default-preview.png'
+            self.subwindow = Render(fullscreen= False, draw_vertices= False)
+            self.subwindow.generate_png_preview(self.preview)
+
+    def update_preview(self, default: bool):
+        if not default:
+            preview = self.file[:-4]+'.png'
+            self.preview = preview
+            if self.subwindow is not None:
+                self.subwindow.generate_png_preview(preview)
+            else:
+                self.subwindow = Render(file = self.file, fullscreen = False, draw_vertices=False)
+                self.subwindow.generate_png_preview(preview)
+        elif default:
+            self.preview = 'default-preview.png'
+            self.subwindow = Render(fullscreen= False, draw_vertices= False)
+            self.subwindow.generate_png_preview(self.preview)
+        self.photo = ImageTk.PhotoImage(Image.open(self.preview).resize((385, 200), Image.ANTIALIAS))
+        self.preview_frame.itemconfig(self.preview_id, image = self.photo)
 
 
     def file_select(self): 
         filetypes = [['*.stl', '*.obj', '*.3mf', 'Compatible 3D Files']]
-        self.file = custom_fileopenbox(filetypes=filetypes, multiple=False, title='Select a single 3D Compatible File for Wolf\'s 3D Engine', icon = self.iconbitmap)
+        file = custom_fileopenbox(filetypes=filetypes, multiple=False, title='Select a single 3D Compatible File for Wolf\'s 3D Engine', icon = self.iconbitmap)
+        if file is not None:
+            self.file = file
         self.file_shorthand = self.file.split('\\')[-1]
         self.selected_file['text'] = f'Selected File: {self.file_shorthand}'
 
@@ -84,21 +107,13 @@ class App(TkinterDnD.Tk):
                 self.warning_label.destroy()
                 self.warning_label = None
                 self.warning_text = None
+            self.update_preview(default=False)
         else:
             self.warning_text = 'Warning: Incompatible Filetype'
             self.raise_warning()
+            self.update_preview(default=True)
     
-    def fullscreen_select(self):
-        if self.fullscreen:
-            self.fullscreen = False
-        elif not self.fullscreen:
-            self.fullscreen = True
-    def vertices_select(self):
-        if self.vertices:
-            self.vertices = False
-        elif not self.vertices:
-            self.vertices = True
-
+    
     def drag_and_drop_file_select(self, event):
         self.preview_frame.delete()
 
@@ -114,9 +129,23 @@ class App(TkinterDnD.Tk):
                 self.warning_label.destroy()
                 self.warning_label = None
                 self.warning_text = None
+            self.update_preview(default=False)
         else:
             self.warning_text = 'Warning: Incompatible Filetype'
             self.raise_warning()
+            self.update_preview(default=True)
+
+    def fullscreen_select(self):
+        if self.fullscreen:
+            self.fullscreen = False
+        elif not self.fullscreen:
+            self.fullscreen = True
+    def vertices_select(self):
+        if self.vertices:
+            self.vertices = False
+        elif not self.vertices:
+            self.vertices = True
+
         
 
     def raise_warning(self):
