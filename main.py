@@ -75,47 +75,46 @@ class App(TkinterDnD.Tk):
         elif self.file is None:
             self.preview = 'default-preview.png'
             self.subwindow = Render(fullscreen= False, draw_vertices= False)
-            self.subwindow.generate_png_preview(self.preview)
+            #self.subwindow.generate_png_preview(self.preview)
+
 
     def update_preview(self, default: bool):
         if not default:
-            preview = self.file[:-4]+'.png'
-            self.preview = preview
-            if self.subwindow is not None:
-                self.subwindow.generate_png_preview(preview)
-            else:
-                self.subwindow = Render(file = self.file, fullscreen = False, draw_vertices=False)
-                self.subwindow.generate_png_preview(preview)
+            self.preview = self.file[:-4]+'.png'
+            self.subwindow = Render(file = self.file, fullscreen = False, draw_vertices=False)
+            self.subwindow.generate_png_preview(self.preview)
         elif default:
             self.preview = 'default-preview.png'
             self.subwindow = Render(fullscreen= False, draw_vertices= False)
             self.subwindow.generate_png_preview(self.preview)
+
         self.photo = ImageTk.PhotoImage(Image.open(self.preview).resize((385, 200), Image.ANTIALIAS))
         self.preview_frame.itemconfig(self.preview_id, image = self.photo)
 
 
     def file_select(self): 
         filetypes = [['*.stl', '*.obj', '*.3mf', 'Compatible 3D Files']]
-        file = custom_fileopenbox(filetypes=filetypes, multiple=False, title='Select a single 3D Compatible File for Wolf\'s 3D Engine', icon = self.iconbitmap)
+        file = custom_fileopenbox(filetypes=filetypes, multiple=False, title='Select a Single 3D Compatible File for Wolf\'s 3D Engine', icon = self.iconbitmap)
         if file is not None:
             self.file = file
-        self.file_shorthand = self.file.split('\\')[-1]
-        self.selected_file['text'] = f'Selected File: {self.file_shorthand}'
+            self.file_shorthand = self.file.split('\\')[-1]
+            self.selected_file['text'] = f'Selected File: {self.file_shorthand}'
 
-        if '.obj' in self.file or '.stl' in self.file or '.3mf' in self.file:
-            if self.warning_label is not None:
-                self.warning_label.destroy()
-                self.warning_label = None
-                self.warning_text = None
-            self.update_preview(default=False)
-        else:
-            self.warning_text = 'Warning: Incompatible Filetype'
-            self.raise_warning()
-            self.update_preview(default=True)
-    
+            if '.obj' in self.file or '.stl' in self.file or '.3mf' in self.file:
+                if self.warning_label is not None:
+                    self.warning_label.destroy()
+                    self.warning_label = None
+                    self.warning_text = None
+                self.update_preview(default=False)
+            else:
+                self.warning_text = 'Warning: Incompatible Filetype'
+                self.raise_warning()
+                self.update_preview(default=True)
+        
+        
     
     def drag_and_drop_file_select(self, event):
-        self.preview_frame.delete()
+        #self.preview_frame.delete()
 
         self.file = event.data
         if '{' in self.file:
