@@ -2,9 +2,6 @@ from __future__ import print_function
 from easygui.boxes import fileboxsetup as fbs
 from easygui.boxes import utils as ut
 import os
-
-from plumbum import local
-
 tk = ut.tk
 """
 .. moduleauthor:: easygui developers and Stephen Raymond Ferg

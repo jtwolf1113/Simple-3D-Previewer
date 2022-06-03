@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-from xmlrpc.client import boolean
 from tkinterdnd2 import *
 from PIL import Image, ImageTk
 
@@ -65,7 +64,7 @@ class App(TkinterDnD.Tk):
 
     def display_preview(self):
         if self.file is not None:
-            preview = self.file[:-4]+'.png'
+            preview = 'preview.png'
             self.preview = preview
             if self.subwindow is not None:
                 self.subwindow.generate_png_preview(preview)
@@ -80,7 +79,7 @@ class App(TkinterDnD.Tk):
 
     def update_preview(self, default: bool):
         if not default:
-            self.preview = self.file[:-4]+'.png'
+            self.preview = 'preview.png'
             self.subwindow = Render(file = self.file, fullscreen = False, draw_vertices=False)
             self.subwindow.generate_png_preview(self.preview)
         elif default:
