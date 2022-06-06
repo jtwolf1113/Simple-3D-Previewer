@@ -47,7 +47,7 @@ class Object:
 
         #scale the normalized space to the screen resolution
         vertices = vertices @ self.window.projection.screen_matrix
-        #slice out the 2D coordinates currently in view
+        #slice out the 2D coordinates currently in view after projection
         vertices = vertices[:,:2]
 
         #iterate over each face to ensure it's in view and draw the projection

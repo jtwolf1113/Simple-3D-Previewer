@@ -1,33 +1,45 @@
-from tkinter import *
-from tkinterdnd2 import *
+import numpy as np
+file = r'C:\Users\jaket\Downloads\bugatti.obj'
 
-def DisplayText(event):
-    # delete entire existing content
-    textbox.delete("1.0","end")
-    # check the file holds txt extension
-    if event.data.endswith(".txt"):
-        with open(event.data, "r") as f:
-            # getting content in a variable
-            for text_line in f:
-                text_line=text_line.strip()
-                textbox.insert("end",f"{text_line}\n")
-win = TkinterDnD.Tk()
-win.title('Delftstack')
-win.geometry('500x400')
-win.config(bg='gold')
+vertices = np.array([[0,1], [1,0],[0,0],[1,1]])
+faces = np.array([(0,1,2)])
+print(vertices[faces[0]])
 
-frame = Frame(win)
-frame.pack()
+def read_obj(file):
+        vertices, faces = [],[]
+        with open(file) as f:
+            for line in f:
+                if line.startswith('v '):
+                    vertices.append([float(coord) for coord in line.split()[1:]]+[1])
+                elif line.startswith('f '):
+                    face_lines = line.split()[1:]
+                    if '//' in line:
+                        splitter = '//'
+                    else:
+                         splitter = '/'
+                    faces.append(tuple([int(face_line.split(splitter)[0]) - 1 for face_line in face_lines]))
+        vertices = np.array(vertices, dtype='float16')
+        faces = np.array(faces, dtype=object)
 
-textbox = Text(frame, height=22, width=50)
-textbox.pack(side=LEFT)
-textbox.drop_target_register(DND_FILES)
-textbox.dnd_bind('<<Drop>>', DisplayText)
+        #renormalize the coordinates after the transformation
+        #renormalize the coordinates after the transformation
+        vertices /= vertices[:, -1].reshape(-1,1)
 
-scrolbar = Scrollbar(frame, orient=VERTICAL)
-scrolbar.pack(side=RIGHT, fill=Y)
+        #coordinates larger than two are not currently in view
+        vertices[(vertices > 2) | (vertices < -2)] = 0
 
-textbox.configure(yscrollcommand=scrolbar.set)
-scrolbar.config(command=textbox.yview)
+        #slice out the 2D coordinates currently in view after projection
+        vertices = vertices[:,:2]
+        
+        with open(r'C:\Users\jaket\Documents\GitHub\Simple-3D-engine\testing.txt', 'w') as f:
+            f.write('Vertices \n')
+            f.writelines([str(vertex)+'\n' for vertex in vertices])
+            f.write('Faces \n')
+            f.writelines([str(face)+'\n' for face in faces]) 
+            f.write('Polygons \n')
+            f.writelines([str(vertices[face]) for face in faces])
 
-win.mainloop()
+read_obj(file)
+
+
+

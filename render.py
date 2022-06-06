@@ -35,10 +35,6 @@ class Render:
         self.draw_vertices = draw_vertices
         self.FPSMAX = 144
         
-        
-        
-        
-
     def create_objects(self):
         self.camera = Camera(self, [.5,1,-6])
         self.projection = Projection(self)
@@ -65,7 +61,7 @@ class Render:
                          splitter = '/'
                     faces.append(tuple([int(face_line.split(splitter)[0]) - 1 for face_line in face_lines]))
         vertices = np.array(vertices, dtype='float16')
-        faces = np.array(faces)
+        faces = np.array(faces, dtype=object)
         return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
 
     def read_stl(self, file):

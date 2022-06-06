@@ -118,7 +118,6 @@ class App(TkinterDnD.Tk):
         self.file = event.data
         if '{' in self.file:
             self.file = self.file[1:-1]
-        print(type(self.file), self.file)
         self.file_shorthand = self.file.split('/')[-1]
         self.selected_file['text'] = f'Selected File: {self.file_shorthand}'
 
