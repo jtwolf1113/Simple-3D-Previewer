@@ -7,16 +7,14 @@ from numba import njit
 def np_any_function(arr, a, b):
     return np.any((arr == a) | (arr == b))
 
-#@njit(fastmath=True)
-#def np_enabled_projection(vertices):
-    #coordinates larger than two are not currently in view
-#    return vertices
-
 
 class Object:
     def __init__(self, app, vertices = None, faces= None, draw_vertices = True) -> None:
         self.window = app
         #vertices are the coordinates in 4-space
+        self.line_color = pg.Color('pink')
+        self.vertex_color = pg.Color('white')
+        self.text_color = pg.Color('white')
         if vertices is not None:
             self.vertices = vertices
         else:
@@ -24,7 +22,6 @@ class Object:
         #faces are indices of relevant vertices
         if faces is not None:
             self.faces = faces
-            self.color_faces = [(pg.Color('pink'), face) for face in self.faces]
             self.label = '' 
         else:
             self.faces = np.array([])
@@ -51,19 +48,20 @@ class Object:
         vertices = vertices[:,:2]
 
         #iterate over each face to ensure it's in view and draw the projection
-        for index, color_face in enumerate(self.color_faces):
-            color, face = color_face
+        for index, face in enumerate(self.faces):
             polygon = vertices[face]
+            if hasattr(self, 'colors'):
+                self.line_color = self.colors[index]
             if not np_any_function(polygon, self.window.WIDTH/2, self.window.HEIGHT/2): #np.any((polygon == self.window.WIDTH/2) | (polygon == self.window.HEIGHT/2)):
-                pg.draw.polygon(self.window.screen, color, polygon, 1)
+                pg.draw.polygon(self.window.screen, self.line_color, polygon, 1)
                 if self.label:
-                    text = self.font.render(self.label[index], True, pg.Color('white'))
+                    text = self.font.render(self.label[index], True, self.text_color)
                     self.window.screen.blit(text, polygon[-1])
         #similar for each vertex
         if self.draw_vertices:
             for vertex in vertices:
                 if not np_any_function(vertex, self.window.WIDTH/2, self.window.HEIGHT/2): #np.any((vertex == self.window.WIDTH/2) | (vertex == self.window.HEIGHT/2)):
-                    pg.draw.circle(self.window.screen, pg.Color('white'), vertex, 2)
+                    pg.draw.circle(self.window.screen, self.vertex_color, vertex, 2)
 
     #object draw function
     def draw(self):

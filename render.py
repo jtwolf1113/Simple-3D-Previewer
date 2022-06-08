@@ -59,9 +59,9 @@ class Render:
                         splitter = '//'
                     else:
                          splitter = '/'
-                    faces.append(tuple([int(face_line.split(splitter)[0]) - 1 for face_line in face_lines]))
+                    faces.append([int(int(face_line.split(splitter)[0])-1) for face_line in face_lines])
         vertices = np.array(vertices, dtype='float16')
-        faces = np.array(faces, dtype=object)
+        faces = np.array(faces)
         return Object(self, vertices=vertices, faces=faces, draw_vertices=self.draw_vertices)
 
     def read_stl(self, file):
@@ -71,7 +71,6 @@ class Render:
         for face in mesh_item.data:
             for vertex in face[1]:
                 vertices.append(vertex.tolist()+[1])
-            #need to adjust this to tell which vertex    
             faces.append((vertex_index,vertex_index+1, vertex_index+2))
             vertex_index += 3
         vertices = np.array(vertices, dtype='float16')

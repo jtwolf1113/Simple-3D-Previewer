@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinterdnd2 import *
 from PIL import Image, ImageTk
-
 from pygame import FULLSCREEN
 from render import *
 from customfileopenbox import *
@@ -74,8 +73,6 @@ class App(TkinterDnD.Tk):
         elif self.file is None:
             self.preview = 'default-preview.png'
             self.subwindow = Render(fullscreen= False, draw_vertices= False)
-            #self.subwindow.generate_png_preview(self.preview)
-
 
     def update_preview(self, default: bool):
         if not default:
@@ -89,7 +86,6 @@ class App(TkinterDnD.Tk):
 
         self.photo = ImageTk.PhotoImage(Image.open(self.preview).resize((385, 200), Image.ANTIALIAS))
         self.preview_frame.itemconfig(self.preview_id, image = self.photo)
-
 
     def file_select(self): 
         filetypes = [['*.stl', '*.obj', '*.3mf', 'Compatible 3D Files']]
@@ -109,9 +105,7 @@ class App(TkinterDnD.Tk):
                 self.warning_text = 'Warning: Incompatible Filetype'
                 self.raise_warning()
                 self.update_preview(default=True)
-        
-        
-    
+            
     def drag_and_drop_file_select(self, event):
         #self.preview_frame.delete()
 
@@ -137,13 +131,12 @@ class App(TkinterDnD.Tk):
             self.fullscreen = False
         elif not self.fullscreen:
             self.fullscreen = True
+
     def vertices_select(self):
         if self.vertices:
             self.vertices = False
         elif not self.vertices:
-            self.vertices = True
-
-        
+            self.vertices = True        
 
     def raise_warning(self):
         if self.warning_label is not None:
@@ -151,7 +144,6 @@ class App(TkinterDnD.Tk):
         else:
             self.warning_label = tk.Label(self, text= self.warning_text, fg = 'red', bg = self.primary_gray)
             self.warning_label.pack()
-
 
     def display(self):
         if self.subwindow is None:
