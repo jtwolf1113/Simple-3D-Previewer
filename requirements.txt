@@ -1,0 +1,8 @@
+numpy
+pygame
+easygui
+tkinter
+numba
+stl
+tkinterdnd2
+pillow
