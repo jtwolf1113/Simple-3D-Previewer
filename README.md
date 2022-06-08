@@ -13,9 +13,9 @@ The object can be moved using wasdqe keys and rotated about x and y axes using t
 ## Features to be Added
 
 * Automatic Default Camera Positioning to display the full extent of the object in frame. 
-* More thorough error handling during file selection. 
+* More thorough error handling during file selection and display. 
 * Performance improvements using cython and/or numba (tbd) to improve FPS for highly detailed files. 
-* Additional Pygame environment customizability - default motion, axes display, controls, 
+* Additional Pygame environment customizability - default motion, axes display, controls, and rates of motion.
 * Aesthetic improvements to UI. 
 
 ## **More to Come Soon!**
