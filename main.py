@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinterdnd2 import *
 from PIL import Image, ImageTk
-from pygame import FULLSCREEN
 from render import *
 from customfileopenbox import *
 
