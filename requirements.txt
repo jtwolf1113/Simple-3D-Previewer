@@ -4,5 +4,7 @@ easygui
 tk
 numba
 stl
+numpy-stl
 tkinterdnd2
 pillow
+
