@@ -10,7 +10,6 @@ class App(TkinterDnD.Tk):
         TkinterDnD.Tk.__init__(self)
         self.file = None
         self.file_shorthand = None
-        self.geometry('770x600')
         self.primary_blue = '#045594'
         self.primary_gray = '#424549'
         self.protocol("WM_DELETE_WINDOW", self.on_close)
